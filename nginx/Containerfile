@@ -1,1 +1,17 @@
-#
+FROM docker.io/nginx:1.25-alpine
+
+RUN apk upgrade --update --no-cache --no-check-certificate \
+ && apk add ca-certificates --update --no-cache --no-check-certificate \
+ && curl -sko /usr/local/share/ca-certificates/CheckpointCA.crt https://raw.githubusercontent.com/dlonghi/containers/main/CheckpointCA.crt \
+ && update-ca-certificates \
+ && apk add tzdata --update --no-cache \
+ && cp /usr/share/zoneinfo/America/Sao_Paulo /etc/localtime \
+ && echo America/Sao_Paulo > /etc/timezone \
+ && apk add openssl --update --no-cache \
+ && openssl req -new -x509 -sha512 -nodes -newkey ec:<(openssl ecparam -name secp384r1) -subj "/C=BR/ST=DF/L=Brasilia/CN=*.localhost/O=SnakeOil" -addext "subjectAltName = DNS:localhost, DNS:127.0.0.1" -keyout /etc/nginx/server.key -out /etc/nginx/server.crt -days 3650 \
+ && chmod 600 /etc/nginx/server.key \
+ && apk del openssl \
+ && rm -rf /var/cache/apk/* \
+ && curl -ko /usr/share/nginx/html/favicon.ico https://raw.githubusercontent.com/dlonghi/containers/main/favicon.ico \
+ && echo '<? echo "<pre>"; print_r(get_defined_vars()); echo "</pre>"; phpinfo(); xdebug_info();' > /usr/share/nginx/html/info.php \
+ && curl -ko /etc/nginx/nginx.conf https://raw.githubusercontent.com/dlonghi/containers/main/nginx/config/nginx_original_timed.conf
