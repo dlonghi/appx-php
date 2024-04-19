@@ -46,12 +46,7 @@ https://access.redhat.com/documentation/pt-br/red_hat_enterprise_linux/9/html/de
 
 
 
-
-
-
-
-
-dnf repoquery -l nginx > nginx_repoquery.txt
+#### dnf repoquery -l nginx > nginx_repoquery.txt ####
 /etc/logrotate.d/nginx
 /etc/nginx
 /etc/nginx/conf.d
@@ -204,7 +199,6 @@ dnf repoquery -l nginx > nginx_repoquery.txt
 
 
 
-
 #### /etc/nginx/nginx.conf (original) ####
 user  nginx;
 worker_processes  auto;
@@ -304,6 +298,20 @@ ExecStop=/bin/sh -c "/bin/kill -s TERM $(/bin/cat /var/run/nginx.pid)"
 [Install]
 WantedBy=multi-user.target
 
+
+mkdir /etc/systemd/system/nginx.d
+cd /etc/systemd/system/nginx.d
+
+#### /etc/systemd/system/nginx.d/overrides.conf (drop-in) ####
+cat <<'EOF' > /etc/systemd/system/nginx.d/overrides.conf
+#[Unit]
+#After=network-online.target remote-fs.target nss-lookup.target
+
+[Service]
+PIDFile=/run/nginx.pid
+EOF
+
+cat /etc/systemd/system/nginx.d/overrides.conf
 
 
 #### /etc/logrotate.d/nginx (original) ####
