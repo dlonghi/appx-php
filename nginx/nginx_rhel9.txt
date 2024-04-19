@@ -34,9 +34,12 @@ curl -sk https://nginx.org/favicon.ico -o /usr/share/nginx/html/favicon.ico
 
 #ls -ltrh /usr/share/nginx/html
 
+mkdir /opt/appx/public -p
+curl -sk https://nginx.org/favicon.ico -o /opt/appx/public/favicon.ico
 
+echo '<? echo "<pre>"; print_r(get_defined_vars()); echo "</pre>"; phpinfo(); xdebug_info();' > /opt/appx/public/info.php
 
-
+curl -s https://raw.githubusercontent.com/dlonghi/appx-php-nginx/main/nginx/index.html -o /opt/appx/public/index.html
 
 https://access.redhat.com/documentation/pt-br/red_hat_enterprise_linux/9/html/deploying_web_servers_and_reverse_proxies/setting-up-and-configuring-nginx_deploying-web-servers-and-reverse-proxies
 
