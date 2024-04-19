@@ -20,6 +20,12 @@ dnf upgrade -y
 
 dnf install -y nginx
 
+#sed -i -e 's/\/var\/run\/nginx\.pid/\/run\/nginx\.pid/g' /usr/lib/systemd/system/nginx.service
+
+/etc/systemd/system/
+
+systemctl
+
 openssl req -new -x509 -sha512 -nodes -newkey ec:<(openssl ecparam -name secp384r1) -subj "/C=BR/ST=DF/L=Brasilia/CN=*.localhost/O=SnakeOil" -addext "subjectAltName = DNS:localhost, DNS:127.0.0.1" -out /etc/pki/tls/certs/server.crt -keyout /etc/pki/tls/private/server.key -days 3650 \
 
 #ls -ltrh /etc/pki/tls/private/ /etc/pki/tls/certs/
@@ -278,6 +284,26 @@ server {
     #    deny  all;
     #}
 }
+
+
+
+#### /usr/lib/systemd/system/nginx.service (Original) ####
+[Unit]
+Description=nginx - high performance web server
+Documentation=http://nginx.org/en/docs/
+After=network-online.target remote-fs.target nss-lookup.target
+Wants=network-online.target
+
+[Service]
+Type=forking
+PIDFile=/var/run/nginx.pid
+ExecStart=/usr/sbin/nginx -c /etc/nginx/nginx.conf
+ExecReload=/bin/sh -c "/bin/kill -s HUP $(/bin/cat /var/run/nginx.pid)"
+ExecStop=/bin/sh -c "/bin/kill -s TERM $(/bin/cat /var/run/nginx.pid)"
+
+[Install]
+WantedBy=multi-user.target
+
 
 
 #### /etc/logrotate.d/nginx (original) ####
