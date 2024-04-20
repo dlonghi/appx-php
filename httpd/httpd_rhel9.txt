@@ -207,6 +207,11 @@ cat /etc/logrotate.d/php-fpm
 
 cat /etc/logrotate.d/php-fpm
 /var/log/php-fpm/*log {
+    daily
+    dateext
+    dateformat -%Y.%m.%d
+    rotate 365
+    compress
     missingok
     notifempty
     sharedscripts
