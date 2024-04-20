@@ -3,7 +3,7 @@ cat <<'EOF' > /etc/yum.repos.d/nginx.repo
 name=nginx stable repo
 baseurl=http://nginx.org/packages/rhel/$releasever/$basearch/
 gpgcheck=1
-enabled=1
+enabled=0
 gpgkey=https://nginx.org/keys/nginx_signing.key
 module_hotfixes=true
 
@@ -11,7 +11,7 @@ module_hotfixes=true
 name=nginx mainline repo
 baseurl=http://nginx.org/packages/mainline/rhel/$releasever/$basearch/
 gpgcheck=1
-enabled=0
+enabled=1
 gpgkey=https://nginx.org/keys/nginx_signing.key
 module_hotfixes=true
 EOF
