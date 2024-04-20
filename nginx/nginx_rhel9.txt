@@ -38,7 +38,7 @@ mkdir /opt/appx/public -p
 curl -s https://nginx.org/favicon.ico -o /opt/appx/public/favicon.ico
 curl -s https://raw.githubusercontent.com/dlonghi/appx-php-nginx/main/nginx/index.html -o /opt/appx/public/index.html
 
-echo '<? echo "<pre>"; print_r(get_defined_vars()); echo "</pre>"; phpinfo(); xdebug_info();' > /opt/appx/public/info.php
+echo '<?php echo "<pre>"; print_r(get_defined_vars()) ; echo "</pre>"; phpinfo(); xdebug_info();' > /opt/appx/public/info.php
 
 curl -s https://raw.githubusercontent.com/dlonghi/appx-php-nginx/main/nginx/index.html -o /opt/appx/public/index.html
 
