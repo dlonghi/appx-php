@@ -21,10 +21,20 @@ dnf upgrade -y
 dnf install -y nginx
 
 #sed -i -e 's/\/var\/run\/nginx\.pid/\/run\/nginx\.pid/g' /usr/lib/systemd/system/nginx.service
+mkdir /etc/systemd/system/nginx.d
+cd /etc/systemd/system/nginx.d
 
-/etc/systemd/system/
+#### /etc/systemd/system/nginx.d/overrides.conf (drop-in) ####
+cat <<'EOF' > /etc/systemd/system/nginx.d/overrides.conf
+#[Unit]
+#After=network-online.target remote-fs.target nss-lookup.target
 
-systemctl
+[Service]
+PIDFile=/run/nginx.pid
+EOF
+
+systemctl restart nginx
+
 
 openssl req -new -x509 -sha512 -nodes -newkey ec:<(openssl ecparam -name secp384r1) -subj "/C=BR/ST=DF/L=Brasilia/CN=*.localhost/O=SnakeOil" -addext "subjectAltName = DNS:localhost, DNS:127.0.0.1" -out /etc/pki/tls/certs/server.crt -keyout /etc/pki/tls/private/server.key -days 3650 \
 
@@ -303,19 +313,7 @@ ExecStop=/bin/sh -c "/bin/kill -s TERM $(/bin/cat /var/run/nginx.pid)"
 WantedBy=multi-user.target
 
 
-mkdir /etc/systemd/system/nginx.d
-cd /etc/systemd/system/nginx.d
 
-#### /etc/systemd/system/nginx.d/overrides.conf (drop-in) ####
-cat <<'EOF' > /etc/systemd/system/nginx.d/overrides.conf
-#[Unit]
-#After=network-online.target remote-fs.target nss-lookup.target
-
-[Service]
-PIDFile=/run/nginx.pid
-EOF
-
-cat /etc/systemd/system/nginx.d/overrides.conf
 
 
 #### /etc/logrotate.d/nginx (original) ####
