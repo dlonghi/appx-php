@@ -20,10 +20,11 @@ dnf upgrade -y
 
 dnf install -y nginx
 
+
 #sed -i -e 's/\/var\/run\/nginx\.pid/\/run\/nginx\.pid/g' /usr/lib/systemd/system/nginx.service
+
 mkdir /etc/systemd/system/nginx.d
 cd /etc/systemd/system/nginx.d
-
 #### /etc/systemd/system/nginx.d/overrides.conf (drop-in) ####
 cat <<'EOF' > /etc/systemd/system/nginx.d/overrides.conf
 #[Unit]
