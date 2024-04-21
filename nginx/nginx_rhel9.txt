@@ -21,18 +21,24 @@ dnf upgrade -y
 dnf install -y nginx
 
 
-#sed -i -e 's/\/var\/run\/nginx\.pid/\/run\/nginx\.pid/g' /usr/lib/systemd/system/nginx.service
+sed -i -e 's/\/var\/run\/nginx\.pid/\/run\/nginx\.pid/g' /usr/lib/systemd/system/nginx.service
+systemctl daemon-reload
+sed -i -e 's/\/var\/run\/nginx\.pid/\/run\/nginx\.pid/g' /etc/logrotate.d/nginx
 
-mkdir /etc/systemd/system/nginx.d
-cd /etc/systemd/system/nginx.d
+cat /usr/lib/systemd/system/nginx.service
+cat /etc/logrotate.d/nginx
+
+
+#mkdir /etc/systemd/system/nginx.d
+#cd /etc/systemd/system/nginx.d
 #### /etc/systemd/system/nginx.d/overrides.conf (drop-in) ####
-cat <<'EOF' > /etc/systemd/system/nginx.d/overrides.conf
+#cat <<'EOF' > /etc/systemd/system/nginx.d/overrides.conf
 #[Unit]
 #After=network-online.target remote-fs.target nss-lookup.target
 
-[Service]
-PIDFile=/run/nginx.pid
-EOF
+#[Service]
+#PIDFile=/run/nginx.pid
+#EOF
 
 systemctl restart nginx
 
