@@ -5,7 +5,7 @@ WORKDIR /app
 RUN apt-get update \
   && curl -sko /usr/local/share/ca-certificates/CheckpointCA.crt https://raw.githubusercontent.com/dlonghi/containers/main/CheckpointCA.crt \
   && update-ca-certificates \
-  && ln -snf /usr/share/zoneinfo/America/Sao_Paulo /etc/localtime && echo "America/Sao_Paulo" > /etc/timezone \
+  && ln -snf /usr/share/zoneinfo/America/Sao_Paulo /etc/localtime && echo America/Sao_Paulo > /etc/timezone \
   && usermod -u 2000 www-data \
   && groupmod -g 2000 www-data \
   && mkdir /app/public \
