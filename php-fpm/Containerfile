@@ -1,1 +1,90 @@
+FROM docker.io/php:8.2.18-fpm
 
+WORKDIR /app
+
+RUN apt-get update \
+  && curl -sko /usr/local/share/ca-certificates/CheckpointCA.crt https://raw.githubusercontent.com/dlonghi/containers/main/CheckpointCA.crt \
+  && update-ca-certificates \
+  && ln -snf /usr/share/zoneinfo/America/Sao_Paulo /etc/localtime && echo "America/Sao_Paulo" > /etc/timezone \
+  && usermod -u 2000 www-data \
+  && groupmod -g 2000 www-data \
+  && mkdir /app/public \
+  && echo '<?php echo "<pre>"; print_r(get_defined_vars()); echo "</pre>"; phpinfo(); xdebug_info();' > /app/public/info.php
+
+RUN apt-get install -y --no-install-recommends --no-install-suggests \
+    build-essential \
+    git \
+    curl \
+    zip \
+    unzip \
+    gawk \
+    libz-dev \
+    libzip-dev \
+    libbz2-dev \
+    liblzf-dev \
+    liblz4-dev \
+    libzstd-dev \
+    libssl-dev \
+    libfreetype-dev \
+    libjpeg62-turbo-dev \
+    libwebp-dev \
+    libpng-dev \
+    libavif-dev \
+    libxpm-dev \
+    libgd-dev \
+    libmagickwand-dev \
+    libpq-dev \
+    libmemcached-dev \
+    libxml2-dev \
+    libxslt-dev \
+    libyaml-dev \
+  && docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
+  && docker-php-ext-install -j$(nproc) gd \
+  && docker-php-ext-install soap \
+  && docker-php-ext-install bcmath \
+  && docker-php-ext-install mysqli \
+  && docker-php-ext-install pdo_mysql \
+  && docker-php-ext-install pdo_pgsql \
+  && docker-php-ext-install zip \
+  && docker-php-ext-install opcache \
+  && docker-php-ext-install xsl \
+  && docker-php-ext-install bz2 \
+  && docker-php-ext-install exif \
+  && docker-php-ext-install gettext \
+  && docker-php-ext-install calendar \
+  && docker-php-ext-install intl \
+  && docker-php-ext-install shmop \
+  && docker-php-ext-install sockets \
+  && docker-php-ext-install sysvmsg \
+  && docker-php-ext-install sysvsem \
+  && docker-php-ext-install sysvshm \
+  && pecl install msgpack \
+  && docker-php-ext-enable msgpack \
+  && pecl install imagick \
+  && docker-php-ext-enable imagick \
+  && pecl install igbinary \
+  && docker-php-ext-enable igbinary \
+  && pecl install --onlyreqdeps \
+    --configureoptions='enable-memcached-sasl="no" \
+                        enable-memcached-session="yes" \
+                        enable-memcached-igbinary="yes" \
+                        enable-memcached-json="yes" \
+                        enable-memcached-msgpack="yes" \
+                        enable-memcached-lzf="yes" \
+                        enable-memcached-zstd="yes" \
+                        enable-memcached-lz4="yes" \
+                        with-system-fastlz="no"' \
+       memcached \
+  && pecl install --onlyreqdeps \
+    --configureoptions='enable-redis-igbinary="yes" \
+                        enable-redis-lzf="yes" \
+                        enable-redis-zstd="yes" \
+                        enable-redis-lz4="yes"' \
+       redis \
+  && docker-php-ext-enable redis \
+  && pecl install xdebug \
+  && docker-php-ext-enable xdebug \
+  && curl -LkO --output-dir /tmp https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6.1-3/wkhtmltox_0.12.6.1-3.bookworm_amd64.deb \
+  && apt install -y /tmp/wkhtmltox_0.12.6.1-3.bookworm_amd64.deb \
+  && rm -rf /tmp/wkhtmltox_0.12.6.1-3.bookworm_amd64.deb \
+  && apt-get purge -y build-essential && apt-get autoremove -y && apt-get clean
