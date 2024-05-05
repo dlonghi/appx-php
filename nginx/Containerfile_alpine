@@ -13,9 +13,12 @@ RUN apk upgrade --update --no-cache --no-check-certificate \
  && openssl req -new -x509 -sha512 -nodes -newkey ec:<(openssl ecparam -name secp384r1) -subj "/C=BR/ST=DF/L=Brasilia/CN=*.localhost/O=SnakeOil" -addext "subjectAltName = DNS:localhost, DNS:127.0.0.1" -keyout /etc/nginx/server.key -out /etc/nginx/server.crt -days 3650 \
  && chmod 600 /etc/nginx/server.key \
  && apk del openssl \
- && rm -rf /var/cache/apk/* \
- && usermod -u 2000 nginx \
+ && apk add shadow --update --no-cache \
  && groupmod -g 2000 nginx \
+ && usermod -u 2000 -g 2000 nginx \
+ && apk del shadow \
+ && rm -rf /var/cache/apk/* \
+ && echo \
  && mkdir -p /app/public \
  && curl -ko /usr/share/nginx/html/favicon.ico https://raw.githubusercontent.com/dlonghi/containers/main/favicon.ico \
  && curl -ko /app/public/favicon.ico https://raw.githubusercontent.com/dlonghi/containers/main/favicon.ico \
