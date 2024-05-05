@@ -366,3 +366,16 @@ cat <<'EOF' > /etc/logrotate.d/nginx
         endscript
 EOF
 
+
+
+
+
+
+
+
+
+
+
+cat /etc/systemd/system/nginx.service.d/php-fpm.conf
+[Unit]
+Wants=php-fpm.service
