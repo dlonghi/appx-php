@@ -10,6 +10,8 @@ RUN apk upgrade --update --no-cache --no-check-certificate \
  && apk add openssl --update --no-cache \
  && openssl req -new -x509 -sha512 -nodes -newkey ec:<(openssl ecparam -name secp384r1) -subj "/C=BR/ST=DF/L=Brasilia/CN=*.localhost/O=SnakeOil" -addext "subjectAltName = DNS:localhost, DNS:127.0.0.1" -keyout /etc/nginx/server.key -out /etc/nginx/server.crt -days 3650 \
  && chmod 600 /etc/nginx/server.key \
+ && usermod -u 2000 nginx \
+ && groupmod -g 2000 nginx \
  && apk del openssl \
  && rm -rf /var/cache/apk/* \
 
