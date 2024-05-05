@@ -25,4 +25,5 @@ RUN apk upgrade --update --no-cache --no-check-certificate \
  && echo '<? echo "<pre>"; print_r(get_defined_vars()); echo "</pre>"; phpinfo(); xdebug_info();' > /usr/share/nginx/html/info.php \
  && curl -ko /app/public/index.html https://raw.githubusercontent.com/dlonghi/appx-php/main/nginx/index.html \
  && curl -ko /app/public/favicon.ico https://raw.githubusercontent.com/dlonghi/containers/main/favicon.ico \
+ && echo '<? echo "<pre>"; print_r(get_defined_vars()); echo "</pre>"; phpinfo(); xdebug_info();' > /app/public/info_nginx.php \
  && echo '<? echo "<pre>"; print_r(get_defined_vars()); echo "</pre>"; phpinfo(); xdebug_info();' > /app/public/info.php
