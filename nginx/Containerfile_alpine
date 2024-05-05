@@ -19,9 +19,10 @@ RUN apk upgrade --update --no-cache --no-check-certificate \
  && apk del shadow \
  && rm -rf /var/cache/apk/* \
  && echo \
+ && curl -ko /etc/nginx/nginx.conf https://raw.githubusercontent.com/dlonghi/appx-php-nginx/main/nginx/nginx_podman.conf \
  && mkdir -p /app/public \
  && curl -ko /usr/share/nginx/html/favicon.ico https://raw.githubusercontent.com/dlonghi/containers/main/favicon.ico \
- && curl -ko /app/public/favicon.ico https://raw.githubusercontent.com/dlonghi/containers/main/favicon.ico \
  && echo '<? echo "<pre>"; print_r(get_defined_vars()); echo "</pre>"; phpinfo(); xdebug_info();' > /usr/share/nginx/html/info.php \
- && echo '<? echo "<pre>"; print_r(get_defined_vars()); echo "</pre>"; phpinfo(); xdebug_info();' > /app/public/info.php \
- && curl -ko /etc/nginx/nginx.conf https://raw.githubusercontent.com/dlonghi/appx-php-nginx/main/nginx/nginx_podman.conf
+ && curl -ko /app/public/index.html https://raw.githubusercontent.com/dlonghi/appx-php/main/nginx/index.html \
+ && curl -ko /app/public/favicon.ico https://raw.githubusercontent.com/dlonghi/containers/main/favicon.ico \
+ && echo '<? echo "<pre>"; print_r(get_defined_vars()); echo "</pre>"; phpinfo(); xdebug_info();' > /app/public/info.php
